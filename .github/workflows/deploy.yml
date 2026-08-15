@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_TAX_AI_PASSWORD: ${{ secrets.NEXT_PUBLIC_TAX_AI_PASSWORD }}
+      NEXT_PUBLIC_BASE_PATH: /Leadership-Portfolio
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
