@@ -43,17 +43,17 @@ Environment: Node v26.5.0 / npm 11.17.0 present. **Poppler is installed** (`pdft
 | Charts/tables | Structured `<table>` components, not a charting library (see above) |
 | Hosting | Deliberately deferred — build/verify with `next dev`/`next build` only |
 
-## Build order (steps 1–2 done; resume at step 3)
+## Build order (steps 1–9 done through homepage; ⏸ checkpoint)
 
 1. ~~Install poppler~~ ✅ done
-2. ~~Register Figma Dev Mode MCP Server~~ ✅ done (now needs re-registering in Cursor's own MCP config, per instructions above)
-3. **Extract design tokens** via Figma MCP from the homepage desktop + mobile frames: colors, font family/sizes/weights/line-heights, spacing scale, radii, shadows, breakpoints, button/card/nav component specs. **Also capture the responsive *pattern* per section** (e.g. 3-column → stacked, nav → hamburger, carousel item counts, image/text reflow order) — not just token values at each breakpoint. Write into `design/style-guide.md` as reusable rules, since About/Leadership/Contact/case-study pages have no Figma frames of their own and must inherit this responsive behavior rather than the homepage's specific layout.
-4. **Scaffold Next.js.** Project root has non-empty asset folders, so `create-next-app` will refuse to scaffold in place — scaffold into a sibling temp dir (`npx create-next-app@latest web-scaffold-tmp --ts --tailwind --app --src-dir --import-alias "@/*" --eslint`), merge its output into the project root, remove the temp dir. Confirm Tailwind v4 landed (`@theme` in `globals.css`). Initialize git if not already done.
-5. **Wire tokens into `globals.css`'s `@theme` block** — every component from here on uses these tokens exclusively, never hardcoded hex/px values.
-6. **Migrate assets**: `Images/*` → `public/images/{homepage,about,case-studies/<slug>}/`; `logos/Company logos.svg` → `public/images/logos/company-logos.svg`.
-7. **Shared layout shell**: `Nav` (all 6 routes + Contact, mobile hamburger) and `Footer` ("Let's chat" CTA, logo strip, LinkedIn) in `src/components/layout/`; wire fonts in `src/app/layout.tsx`.
-8. **Base components**: `npx shadcn@latest init` + add button/card/tabs/carousel/badge, reskin with tokens, then build `TestimonialCarousel`, `WorkPreviewGrid`, `PrinciplesTable`.
-9. **Homepage first** (`src/app/page.tsx`) — the styling source of truth; iterate until desktop + mobile match the Figma frames before other pages.
+2. ~~Register Figma Dev Mode MCP Server~~ ✅ done (Cursor Figma plugin authenticated 2026-08-05)
+3. ~~**Extract design tokens**~~ ✅ done — `design/style-guide.md` from homepage desktop (`102:4565`) + mobile (`120:4884`)
+4. ~~**Scaffold Next.js**~~ ✅ done — Next 16 + Tailwind v4 + App Router + `src/`; git already present
+5. ~~**Wire tokens into `globals.css`**~~ ✅ done — `@theme inline` in `src/app/globals.css`; Google Sans Flex via `next/font`
+6. ~~**Migrate assets**~~ ✅ done — under `public/images/{homepage,about,case-studies/*,logos}/`
+7. ~~**Shared layout shell**~~ ✅ done — `Nav` + `Footer` in `src/components/layout/`
+8. ~~**Base components**~~ ✅ done — shadcn button/carousel reskinned; `Hero`, `PrinciplesTable`, `WorkPreviewGrid`, `TestimonialCarousel`
+9. ~~**Homepage first**~~ ✅ done — `src/app/page.tsx` + `content/homepage.ts`
    - **⏸ CHECKPOINT — stop here.** Alicia wants to review the homepage (desktop + mobile) and approve it before any other page is built. Do not proceed to step 10 until she's confirmed it looks right — this is the styling baseline every other page inherits.
 10. **Content transcription**: `pdftotext -layout` the copy PDF as a disposable typing aid, then hand-transcribe into `content/types.ts` (the `Block` union) + `content/{homepage,about,leadership,contact,case-studies/*}.ts`. Resolve the Contact-page content question here.
 11. **Case-study shared components**: `CaseStudyLayout`, `CaseStudySection`, `CaseStudyTabs` (Monileo), `ImageCarousel` (Monileo), `ImpactMetricTable` (Tax & AI, Orientation).
@@ -61,9 +61,10 @@ Environment: Node v26.5.0 / npm 11.17.0 present. **Poppler is installed** (`pdft
 13. **Build the 3 case study pages** (`src/app/work/{tax-ai,monileo,orientation}/page.tsx`) as thin wrappers around `CaseStudyLayout` + content file.
 14. **About, Leadership, Contact pages** — mostly prose + existing components; shared `PillarBlock` for Consistent/Clear/Care, used compactly on homepage and fully on Leadership.
 15. **Documentation & skills** — Alicia doesn't expect frequent site changes beyond new case studies, so prioritize the case-study skill:
-    - `CLAUDE.md` (root, works for Cursor too as general repo context): stack summary, folder map, "always check `design/style-guide.md` before styling," pointer to case-study pattern.
-    - `design/style-guide.md`: the step-3 token artifact, kept living.
-    - `.claude/skills/case-study/SKILL.md` (or equivalent Cursor rules/doc): documents the case-study pattern (Hero → Challenge → Opportunity → Approach → Result, optional Tabs/Carousel/ImpactMetricTable) and exact steps to add a new case study.
+    - ✅ `CLAUDE.md` (root, works for Cursor too as general repo context): stack summary, folder map, pointer to `design/style-guide.md` and the case-study pattern — written ahead of schedule (2026-08-05), before any code exists, so an agent picking up the repo has orientation immediately. Update it once `design/style-guide.md` and the actual component tree exist — some of it is still forward-looking.
+    - ✅ `design/style-guide.md`: the step-3 token artifact, kept living. Created 2026-08-05 from homepage Figma frames.
+    - ✅ `.claude/skills/case-study/SKILL.md`: documents the case-study pattern (Hero → Impact → Challenge → Opportunity → [Tabs] → Approach → [Carousel] → Result → [Testimonials], per-case-study shape table) and steps to add a new one — written ahead of schedule (2026-08-05) as a **draft**, since no case-study components exist yet to verify it against. Re-check component names/paths once step 11 (shared case-study components) is actually built, before relying on it.
+    - ✅ `docs/content-reference.md` (new, not originally in the plan): maps the copy PDF's section structure and bracket-marker legend (`[Photo]`, `[Chart format]`, `[Tab section]`, `[Carousal format]`) so step 10's transcription doesn't require re-reading the whole 33pp PDF. Written 2026-08-05.
 16. **Verification**: `npm run dev`, walk all 7 routes (`/`, `/about`, `/leadership`, `/contact`, `/work/tax-ai`, `/work/monileo`, `/work/orientation`) against the Figma frames at a full width sweep — mobile (~375px), tablet (~768px), and desktop (~1440px), plus one in-between/laggy width per page to catch reflow breaks the three snap points miss. Confirm nav/footer/token consistency and no horizontal scroll/overlap at any width. `npm run build` and `npm run lint` must pass clean.
 
 ## Critical files to create

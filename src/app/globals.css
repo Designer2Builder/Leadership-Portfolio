@@ -1,0 +1,206 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Design tokens — updated from Figma homepage desktop 102:4565 + mobile 171:5775 */
+@theme inline {
+  /* Color */
+  --color-plum: #5d1e4c;
+  --color-cream: #fcfbf9;
+  --color-lime: #8cff7a;
+  --color-lime-muted: rgb(140 255 122 / 0.25);
+  --color-sky: #7ad4ff; /* Paper to Digital — #UNDERSTAND phase tag */
+  --color-amber: #ffd27a; /* Paper to Digital — #EXPLORE phase tag */
+  --color-violet: #c79aff; /* Paper to Digital — #MATERIALIZE phase tag */
+  --color-text: #fcfbf9;
+  --color-text-muted: rgb(255 255 255 / 0.75);
+  --color-text-on-primary: #5d1e4c;
+  --color-border: rgb(252 251 249 / 0.5);
+  --color-border-subtle: rgb(255 255 255 / 0.5);
+  --color-surface: rgb(255 255 255 / 0.1);
+  --color-surface-raised: rgb(255 255 255 / 0.15); /* About values panel */
+  --color-surface-cream: rgb(252 251 249 / 0.1);
+  --color-surface-dark: rgb(0 0 0 / 0.15);
+  --color-surface-footer: rgb(255 255 255 / 0.05);
+  --color-stripe: rgb(252 251 249 / 0.06);
+
+  /* Semantic / shadcn bridge */
+  --color-background: var(--color-plum);
+  --color-foreground: var(--color-cream);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-cream);
+  --color-popover: var(--color-plum);
+  --color-popover-foreground: var(--color-cream);
+  --color-primary: var(--color-cream);
+  --color-primary-foreground: var(--color-plum);
+  --color-secondary: transparent;
+  --color-secondary-foreground: var(--color-cream);
+  --color-muted: var(--color-surface);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-accent: var(--color-lime);
+  --color-accent-foreground: var(--color-plum);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-input: var(--color-border);
+  --color-ring: var(--color-cream);
+
+  /* Typography */
+  --font-sans: var(--font-google-sans-flex), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* Radii */
+  --radius-pill: 50px;
+  --radius-panel: 25px;
+  --radius-stat: 0.9375rem; /* 15px — Impact metric cards */
+  --radius-card: 10px;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+  --radius-2xl: 1.125rem;
+  --radius-3xl: 1.375rem;
+  --radius-4xl: 1.625rem;
+
+  /* Spacing */
+  --spacing-gutter: 2rem;
+  --spacing-gutter-lg: 8rem;
+  --spacing-button-gap: 0.75rem;
+  --spacing-button-gap-lg: 1.5rem;
+  --spacing-button-h: 2.5rem; /* 40px mobile */
+  --spacing-button-h-lg: 3.125rem; /* 50px desktop */
+  --spacing-section: 4rem;
+  --spacing-section-lg: 7rem;
+  --container-content: 53.6875rem; /* 859px */
+  --container-wide: 53.6875rem; /* 859px — About hero / values panel */
+  --container-nav: 53.6875rem; /* 859px */
+
+  /* Type — Figma: hero 32→48, body 20→32, section 24→48/64 */
+  --text-hero: clamp(2rem, 1.25rem + 2vw, 3rem); /* 32→48 */
+  --text-hero-lg: 3rem;
+  --text-display: 2.5rem;
+  --text-display-lg: 6rem;
+  --text-section: clamp(1.5rem, 1rem + 1.5vw, 3rem); /* 24→48 (Select work / principles) */
+  --text-section-lg: 4rem; /* principles intro desktop Figma still 64 in file; clamp caps mid-range */
+  --text-title: 1.5rem;
+  --text-title-lg: 2.25rem; /* 36px work card titles */
+  --text-body: clamp(1.25rem, 0.85rem + 0.9vw, 2rem); /* 20→32 */
+  --text-body-lg: 2rem;
+  --text-button: 0.75rem; /* 12px mobile */
+  --text-button-lg: 1.25rem; /* 20px desktop */
+  --text-meta: 0.625rem;
+  --text-meta-lg: 1rem;
+  --text-nav: 1rem;
+  --text-footer: 0.875rem;
+  --text-footer-lg: 1.25rem;
+  --text-link: 0.75rem;
+  --text-link-lg: 2rem;
+
+  /* Line heights */
+  --leading-hero: clamp(2.5rem, 1.75rem + 1.5vw, 3.75rem); /* 40→60 */
+  --leading-hero-lg: 3.75rem;
+  --leading-display: 3.75rem;
+}
+
+@layer base {
+  html {
+    @apply h-full antialiased;
+  }
+
+  body {
+    @apply min-h-full bg-plum font-sans text-cream;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  [data-slot="button"][data-variant="primary"],
+  [data-slot="button"][data-variant="default"] {
+    color: var(--color-plum);
+  }
+}
+
+/* Scroll reveal — used by FadeIn */
+@layer utilities {
+  .fade-in-scroll {
+    opacity: 0;
+    transform: translate3d(0, var(--fade-y, 28px), 0)
+      scale(var(--fade-scale, 1));
+    transition:
+      opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+
+  .fade-in-scroll--visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  .work-card-media img {
+    transform: scale(1.04);
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .fade-in-scroll--visible .work-card-media img {
+    transform: scale(1);
+  }
+
+  /* Company logo strip — infinite horizontal marquee */
+  @keyframes logo-marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .logo-marquee {
+    animation: logo-marquee 40s linear infinite;
+    will-change: transform;
+  }
+
+  .logo-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  /* Footer portrait — orbiting text ring */
+  @keyframes orbit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .orbit-spin {
+    animation: orbit-spin 28s linear infinite;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-scroll {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .work-card-media img {
+      transform: none;
+      transition: none;
+    }
+
+    .logo-marquee {
+      animation: none;
+    }
+
+    .logo-marquee > :not(:first-child) {
+      display: none;
+    }
+
+    .orbit-spin {
+      animation: none;
+    }
+  }
+}
