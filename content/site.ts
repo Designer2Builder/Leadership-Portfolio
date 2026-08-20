@@ -5,8 +5,8 @@ export const site = {
   tagline: "Problem solving through design since 2011.",
   copyright: "© 2026 Alicia Wood",
   linkedInUrl: "https://www.linkedin.com/in/aliciaedmonds",
-  /** Resume destination — LinkedIn until a PDF is added */
-  resumeUrl: "https://www.linkedin.com/in/aliciaedmonds",
+  /** Resume PDF served from /public */
+  resumeUrl: "/Alicia-Wood-Resume.pdf",
   orbitText:
     "OVER 15 YEARS OF EXPERIENCE IN FINTECH BASED IN CHARLOTTE, NC. ",
 } as const;

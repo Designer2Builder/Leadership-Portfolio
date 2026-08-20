@@ -1,7 +1,7 @@
 export const homepage = {
   hero: {
     headline:
-      "Hi! I’m Alicia, a nurturing player-coach design leader that leads with both conviction & care.",
+      "Hi! I’m Alicia, a nurturing player-coach product leader that leads with both conviction & care.",
     bio: [
       { text: "My design journey started over ", emphasis: false },
       { text: "15 years ago", emphasis: true },
@@ -114,10 +114,27 @@ export const homepage = {
       },
       {
         quote:
-          "Alicia has been an incredible design manager and an essential partner to the product team. She brings structure, clarity, and direction to the design process while also creating space for meaningful collaboration across functions. She’s a strong advocate for her team and helps product managers deeply understand design needs and workflows. What stands out most is the energy and insight she brings to every conversation. Alicia has a strong member-first mindset and always elevates discussions with thoughtful perspectives rooted in both customer empathy and product vision. She’s been a key force behind the success of this year's tax season, and it’s been a joy to partner with her.",
+          "Alicia has been an incredible design manager and an essential partner to the product team. She brings structure, clarity, and direction to the design process while also creating space for meaningful collaboration across functions. She’s a strong advocate for her team and helps product managers deeply understand design needs and workflows.",
+        attribution: "Cross Functional Partner",
+      },
+      {
+        quote:
+          "What stands out most is the energy and insight she brings to every conversation. Alicia has a strong member-first mindset and always elevates discussions with thoughtful perspectives rooted in both customer empathy and product vision. She’s been a key force behind the success of this year's tax season, and it’s been a joy to partner with her.",
         attribution: "Cross Functional Partner",
       },
     ],
+  },
+  aiMeetsDesign: {
+    title: "AI meets design",
+    body: "AI is a powerful partner, but human judgment remains essential to validate decisions, refine outcomes, and ensure every experience is intentional, inclusive, and held to the highest standard.",
+    cta: {
+      label: "Learn more about my stance on AI and the tools I use",
+      href: "/leadership#ai-stance",
+    },
+    tools: {
+      src: "/images/logos/tools.svg",
+      alt: "Tools: Claude, Gemini Notebook, Perplexity, Cursor",
+    },
   },
   footer: {
     portrait: "/images/homepage/1.0_Image_4_portrait.png",

@@ -24,9 +24,6 @@ export default function ContactPage() {
               {contact.primaryCta.label}
             </a>
           </Button>
-          <Button asChild variant="ghost">
-            <Link href={contact.secondaryCta.href}>{contact.secondaryCta.label}</Link>
-          </Button>
         </div>
 
         <p className="mt-12 text-meta-lg text-text-muted">

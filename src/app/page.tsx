@@ -1,3 +1,4 @@
+import { AiMeetsDesign } from "@/components/home/AiMeetsDesign";
 import { Hero } from "@/components/home/Hero";
 import { PrinciplesTable } from "@/components/home/PrinciplesTable";
 import { TestimonialCarousel } from "@/components/home/TestimonialCarousel";
@@ -9,6 +10,7 @@ export default function Home() {
       <Hero />
       <PrinciplesTable />
       <WorkPreviewGrid />
+      <AiMeetsDesign />
       <TestimonialCarousel />
     </main>
   );

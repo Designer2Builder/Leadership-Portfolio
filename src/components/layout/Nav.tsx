@@ -6,6 +6,54 @@ import { Menu, X } from "lucide-react";
 import { navLinks, site } from "@/content/site";
 import { cn } from "@/lib/utils";
 
+function NavItem({
+  href,
+  label,
+  external,
+  className,
+  onClick,
+}: {
+  href: string;
+  label: string;
+  external?: boolean;
+  className?: string;
+  onClick?: () => void;
+}) {
+  if (external && /^https?:\/\//.test(href)) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onClick={onClick}
+      >
+        {label}
+      </a>
+    );
+  }
+
+  if (external) {
+    return (
+      <Link
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+        onClick={onClick}
+      >
+        {label}
+      </Link>
+    );
+  }
+
+  return (
+    <Link href={href} className={className} onClick={onClick}>
+      {label}
+    </Link>
+  );
+}
+
 export function Nav() {
   const [open, setOpen] = useState(false);
 
@@ -30,20 +78,12 @@ export function Nav() {
         <ul className="hidden items-center gap-6 text-nav text-cream lg:flex">
           {navLinks.map((link) => (
             <li key={link.href}>
-              {"external" in link && link.external ? (
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:opacity-80"
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <Link href={link.href} className="hover:opacity-80">
-                  {link.label}
-                </Link>
-              )}
+              <NavItem
+                href={link.href}
+                label={link.label}
+                external={"external" in link && link.external}
+                className="hover:opacity-80"
+              />
             </li>
           ))}
         </ul>
@@ -70,20 +110,12 @@ export function Nav() {
         <ul className="flex flex-col gap-4 text-body text-cream">
           {navLinks.map((link) => (
             <li key={link.href}>
-              {"external" in link && link.external ? (
-                <a
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ) : (
-                <Link href={link.href} onClick={() => setOpen(false)}>
-                  {link.label}
-                </Link>
-              )}
+              <NavItem
+                href={link.href}
+                label={link.label}
+                external={"external" in link && link.external}
+                onClick={() => setOpen(false)}
+              />
             </li>
           ))}
         </ul>

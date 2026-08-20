@@ -113,5 +113,7 @@ export const leadership = {
         emphasis: false,
       },
     ],
+    toolsIntro:
+      "I use AI everyday, from helping with research to exploration, these are some of my favorite products I use.",
   },
 } as const;

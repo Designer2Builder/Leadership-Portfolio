@@ -2,7 +2,7 @@ import type { WorkItem } from "@/components/work/WorkCard";
 
 export const work: { title: string; intro: string; items: WorkItem[] } = {
   title: "Work",
-  intro: "Case studies from over 15 years of designing across fintech.",
+  intro: "Case studies from my past designing across fintech.",
   items: [
     {
       slug: "tax-ai",

@@ -19,11 +19,11 @@ export function WorkPreviewGrid() {
           <h2 className="text-section leading-hero text-cream">{title}</h2>
           <Link
             href={seeAll.href}
-            className="group hidden items-center gap-2 text-button-lg text-cream hover:opacity-80 lg:inline-flex"
+            className="group inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap text-footer text-cream hover:opacity-80 lg:gap-2 lg:text-button-lg"
           >
             {seeAll.label}
             <ArrowRight
-              className="size-5 transition-transform duration-300 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+              className="size-4 transition-transform duration-300 ease-out group-hover:translate-x-1.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 lg:size-5"
               aria-hidden
             />
           </Link>

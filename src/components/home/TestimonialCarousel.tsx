@@ -31,7 +31,7 @@ export function TestimonialCarousel() {
     <section className="w-full pt-section pb-section lg:pt-section-lg lg:pb-0">
       {/* Mobile title sits above the panel */}
       <FadeIn y={16} className="lg:hidden">
-        <h2 className="mx-auto mb-4 max-w-content px-gutter text-section text-cream">
+        <h2 className="mx-auto mb-4 max-w-content px-gutter text-center text-section text-cream">
           {title}
         </h2>
       </FadeIn>
@@ -46,7 +46,7 @@ export function TestimonialCarousel() {
               "lg:flex lg:min-h-[56.1875rem] lg:flex-col lg:items-center lg:justify-between lg:border-0 lg:px-16 lg:py-36"
             )}
           >
-            <div className="w-full lg:mx-auto lg:flex lg:max-w-[47.9rem] lg:flex-1 lg:flex-col lg:items-center">
+            <div className="mx-auto flex w-full flex-col items-center lg:max-w-[47.9rem] lg:flex-1">
               <h2 className="hidden text-center text-title-lg text-cream lg:block">
                 {title}
               </h2>
@@ -59,7 +59,7 @@ export function TestimonialCarousel() {
                 <CarouselContent>
                   {items.map((item, i) => (
                     <CarouselItem key={i}>
-                      <blockquote className="text-left lg:text-center">
+                      <blockquote className="text-center">
                         <p className="text-meta-lg text-cream lg:text-body">
                           “{item.quote}”
                         </p>

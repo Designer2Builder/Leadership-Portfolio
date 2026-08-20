@@ -126,21 +126,11 @@ export const taxAi: CaseStudy = {
           ],
         },
         {
-          type: "carousel",
-          images: [
-            {
-              src: "/images/case-studies/tax-ai/3.1_Image_1.png",
-              alt: "Workshop materials for segment definition",
-              width: 4000,
-              height: 1734,
-            },
-            {
-              src: "/images/case-studies/tax-ai/3.1_Image_2.png",
-              alt: "Brainstorm experience building blocks",
-              width: 4000,
-              height: 2026,
-            },
-          ],
+          type: "image",
+          src: "/images/case-studies/tax-ai/3.1_Image_1.png",
+          alt: "Workshop materials for segment definition",
+          width: 3171,
+          height: 4000,
         },
       ],
     },

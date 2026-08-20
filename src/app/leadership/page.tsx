@@ -1,5 +1,6 @@
 import { leadership } from "@/content/leadership";
 import { FadeIn } from "@/components/motion/FadeIn";
+import { ToolsStrip } from "@/components/home/ToolsStrip";
 import { LeadershipPillar } from "@/components/leadership/LeadershipPillar";
 
 function EmphasizedCopy({
@@ -42,13 +43,17 @@ export default function LeadershipPage() {
       </div>
 
       <FadeIn y={28} className="mt-14 lg:mt-16">
-        <section>
+        <section id="ai-stance" className="scroll-mt-24">
           <h2 className="text-[2rem] leading-tight text-cream lg:text-[3rem] lg:leading-normal">
             {leadership.aiStance.title}
           </h2>
           <p className="mt-6 text-[1.25rem] leading-normal text-text-muted lg:mt-8 lg:text-[2rem]">
             <EmphasizedCopy parts={leadership.aiStance.body} />
           </p>
+          <p className="mt-8 text-[1.25rem] leading-normal text-text-muted lg:mt-10 lg:text-[2rem]">
+            {leadership.aiStance.toolsIntro}
+          </p>
+          <ToolsStrip className="mt-10 lg:mt-14" />
         </section>
       </FadeIn>
     </main>
