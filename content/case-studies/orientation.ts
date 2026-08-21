@@ -70,11 +70,21 @@ export const orientation: CaseStudy = {
           body: "If we encourage RAD customers to do key actions during a specific time, they would be more likely to not drain their Credit Karma Money account and perform key account actions.",
         },
         {
-          type: "image",
-          src: "/images/case-studies/orientation/3.3_Image_1.png",
-          alt: "Hypothesis framing for reducing Refund Advance account draining",
-          width: 4000,
-          height: 1734,
+          type: "carousel",
+          images: [
+            {
+              src: "/images/case-studies/orientation/3.3_Image_1.png",
+              alt: "Hypothesis framing for reducing Refund Advance account draining",
+              width: 4000,
+              height: 1734,
+            },
+            {
+              src: "/images/case-studies/orientation/UI-1.svg",
+              alt: "Orientation in-product experience UI across member actions and states",
+              width: 20803,
+              height: 11979,
+            },
+          ],
         },
       ],
     },

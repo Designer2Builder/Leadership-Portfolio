@@ -39,6 +39,7 @@ export function ZoomableImage({
   const numericWidth = typeof width === "number" ? width : undefined;
   const numericHeight = typeof height === "number" ? height : undefined;
   const label = alt.trim() ? `View larger: ${alt}` : "View larger image";
+  const unoptimized = srcString.toLowerCase().endsWith(".svg");
 
   return (
     <>
@@ -88,6 +89,7 @@ export function ZoomableImage({
             priority={priority}
             style={style}
             draggable={false}
+            unoptimized={unoptimized}
           />
         ) : (
           <Image
@@ -100,6 +102,7 @@ export function ZoomableImage({
             priority={priority}
             style={style}
             draggable={false}
+            unoptimized={unoptimized}
           />
         )}
         <span
