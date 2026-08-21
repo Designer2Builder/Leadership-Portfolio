@@ -44,32 +44,15 @@ export const monileo: CaseStudy = {
               groups: [
                 {
                   title: "Access and multi-session continuity",
-                  body: "There’s friction in navigating to Money within our app. Members want to:",
-                  bullets: [
-                    "View my balance",
-                    "View transactions",
-                    "Find Credit Builder",
-                  ],
+                  body: "There’s friction in navigating to Money within our app. Members want to view my balance, view transactions and find Credit Builder.",
                 },
                 {
                   title: "Usability and discoverability",
-                  body: "Important tasks require too many taps or are buried too deep in UX",
-                  bullets: [
-                    "Transfer money",
-                    "Find ATMs",
-                    "Deposit a check",
-                    "Card and account numbers",
-                    "Debit card functionality",
-                  ],
+                  body: "Important tasks require too many taps or are buried too deep in UX. Tasks like: transfer money, find ATMs, deposit a check, card and account numbers, and debit card functionality.",
                 },
                 {
                   title: "Know when something needs action",
-                  body: "Money notifications are important and get lost in the noise, and required actions are not obvious when opening the app",
-                  bullets: [
-                    "Declined transaction",
-                    "Transaction needs to be confirmed",
-                    "Bill payment due",
-                  ],
+                  body: "Money notifications are important and get lost in the noise, and required actions are not obvious when opening the app: declined transaction, transaction needs to be confirmed, and bill payment due.",
                 },
               ],
             },
@@ -87,16 +70,21 @@ export const monileo: CaseStudy = {
                 "Family Life: She has a baby girl. Her fiancé has some medical conditions that prevent him from working in the next 6-12 months or even longer. She is now the only income provider for the family.",
               ],
             },
-            {
-              id: "approach",
-              label: "Approach",
-              body: "Address top members pain points by:",
-              bullets: [
-                "Making the most important actions easily accessible",
-                "Heroing the most important metric (what the member has available to spend)",
-                "Upsell must always be tied to a member’s segment and where they are in their activation journey",
-              ],
-            },
+          ],
+        },
+      ],
+    },
+    {
+      id: "redesign-approach",
+      title: "Approach",
+      blocks: [
+        {
+          type: "prose",
+          body: "Address top members pain points by:",
+          bullets: [
+            "Making the most important actions easily accessible",
+            "Heroing the most important metric (what the member has available to spend)",
+            "Upsell must always be tied to a member’s segment and where they are in their activation journey",
           ],
         },
       ],

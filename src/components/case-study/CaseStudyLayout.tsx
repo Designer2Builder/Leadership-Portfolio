@@ -9,8 +9,7 @@ import type {
   StatsBlock,
 } from "@/content/types";
 import { SectionMediaCarousel } from "@/components/case-study/SectionMediaCarousel";
-import { SurfacePanel } from "@/components/home/SurfacePanel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CaseStudyTabs } from "@/components/case-study/CaseStudyTabs";
 import { cn } from "@/lib/utils";
 
 type MediaImage = MediaAsset;
@@ -208,43 +207,7 @@ export function BlockRenderer({ block }: { block: Block }) {
         </div>
       );
     case "tabs":
-      return (
-        <Tabs defaultValue={block.items[0]?.id} className="w-full">
-          <TabsList className="mb-6 flex h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
-            {block.items.map((item) => (
-              <TabsTrigger
-                key={item.id}
-                value={item.id}
-                className="rounded-pill border border-border bg-transparent px-4 py-2 text-meta-lg text-cream data-[state=active]:border-cream data-[state=active]:bg-cream data-[state=active]:text-plum"
-              >
-                {item.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          {block.items.map((item) => (
-            <TabsContent key={item.id} value={item.id} className="mt-0">
-              <SurfacePanel
-                tone="dark"
-                className="rounded-stat border-0 p-6 lg:p-8"
-              >
-                {item.body ? <Paragraphs body={item.body} /> : null}
-                {item.bullets ? <Bullets items={[...item.bullets]} /> : null}
-                {item.groups?.map((group) => (
-                  <div key={group.title} className="mt-6 first:mt-0">
-                    <h4 className="text-[1.25rem] text-cream">{group.title}</h4>
-                    {group.body ? (
-                      <p className="mt-2 text-[1rem] leading-normal text-text-muted lg:text-[1.25rem]">
-                        {group.body}
-                      </p>
-                    ) : null}
-                    {group.bullets ? <Bullets items={[...group.bullets]} /> : null}
-                  </div>
-                ))}
-              </SurfacePanel>
-            </TabsContent>
-          ))}
-        </Tabs>
-      );
+      return <CaseStudyTabs items={block.items} />;
     case "approach-step":
       return (
         <div className="space-y-4">
