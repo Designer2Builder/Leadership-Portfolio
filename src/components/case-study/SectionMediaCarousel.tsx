@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
   Carousel,
@@ -8,6 +7,7 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { ZoomableImage } from "@/components/ui/zoomable-image";
 import type { MediaAsset } from "@/content/types";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,14 @@ type MediaImage = MediaAsset;
 const DEFAULT_RATIO = 0.672;
 
 /** Frosted section carousel — height driven by the tallest image in the set */
-export function SectionMediaCarousel({ images }: { images: MediaImage[] }) {
+export function SectionMediaCarousel({
+  images,
+  inset = false,
+}: {
+  images: MediaImage[];
+  /** Keep the carousel in the content column instead of full-bleed */
+  inset?: boolean;
+}) {
   const [api, setApi] = useState<CarouselApi>();
   const [selected, setSelected] = useState(0);
 
@@ -41,22 +48,31 @@ export function SectionMediaCarousel({ images }: { images: MediaImage[] }) {
   const maxRatio = ratios.length > 0 ? Math.max(...ratios) : DEFAULT_RATIO;
 
   return (
-    <div className="w-full">
+    <div className={inset ? "w-full" : "-mx-gutter lg:mx-0"}>
       <Carousel setApi={setApi} opts={{ loop: images.length > 1 }} className="w-full">
         <CarouselContent>
           {images.map((img) => (
             <CarouselItem key={img.src}>
               <div
-                className="relative w-full overflow-hidden rounded-card bg-surface-raised"
+                className={cn(
+                  "relative w-full overflow-hidden bg-surface-raised",
+                  inset ? "rounded-card" : "lg:rounded-card"
+                )}
                 style={{ aspectRatio: `1 / ${maxRatio}` }}
               >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-cover pb-0 pl-6 pr-6 pt-6 lg:pl-8 lg:pr-8 lg:pt-8"
-                  sizes="(max-width: 1024px) 100vw, 859px"
-                />
+                <div className="absolute inset-0 px-3 pt-3 lg:px-8 lg:pt-8">
+                  <div className="relative size-full">
+                    <ZoomableImage
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      width={img.width}
+                      height={img.height}
+                      className="object-contain object-bottom"
+                      sizes="100vw"
+                    />
+                  </div>
+                </div>
               </div>
             </CarouselItem>
           ))}

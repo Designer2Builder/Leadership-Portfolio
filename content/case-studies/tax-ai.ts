@@ -22,6 +22,65 @@ export const taxAi: CaseStudy = {
             "In 2025 I was assigned to lead a group of 5 designers focused on experiences that led to Credit Karma members filing their taxes with TurboTax. The focus of my team included experiences related to tax tools (for example refund estimator and document checklist), entry points to TurboTax, and a Tax tab found in Credit Karma.",
           ],
         },
+        {
+          type: "carousel",
+          images: [
+            {
+              src: "/images/case-studies/tax-ai/Summary-0.png",
+              alt: "CK2TT workstream title slide",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-1.png",
+              alt: "Entry points on the dashboard and bottom takeovers that drove members to TurboTax or the Tax tab",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-2.png",
+              alt: "Tax tab communicating tax information and encouraging members to file with TurboTax",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-3.png",
+              alt: "Suite of tax tools in Credit Karma for tax-related tasks",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-4.png",
+              alt: "Refund estimator, document checklist, refund planner, and refund tracker screens",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-5.png",
+              alt: "Magic Doc tool for snapping tax documents to pre-fill TurboTax",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-6.png",
+              alt: "Benefit Checker tool helping members navigate tax reform updates",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-7.png",
+              alt: "Household and tax profile under settings for capturing tax-related information",
+              width: 4352,
+              height: 2672,
+            },
+            {
+              src: "/images/case-studies/tax-ai/Summary-8.png",
+              alt: "Credit Karma and TurboTax brand partnership explainer on the Tax tab",
+              width: 4352,
+              height: 2672,
+            },
+          ],
+        },
       ],
     },
     {
@@ -178,15 +237,21 @@ export const taxAi: CaseStudy = {
           images: [
             {
               src: "/images/case-studies/tax-ai/3.1_Image_3.png",
-              alt: "Gemini Gem AI planning tool shared with the team",
-              width: 4000,
-              height: 1734,
+              alt: "Tax Ecosystem Controller Gemini Gem shared with the team",
+              width: 1316,
+              height: 789,
             },
             {
               src: "/images/case-studies/tax-ai/3.1_Image_4.png",
-              alt: "AI-augmented planning for tax experiences",
-              width: 4000,
-              height: 1734,
+              alt: "Gemini Gem answering how to engage young risers about tax filing off-season",
+              width: 1316,
+              height: 791,
+            },
+            {
+              src: "/images/case-studies/tax-ai/3.1_Image_5.png",
+              alt: "Gemini Gem outlining Young Riser, off-season, and Tax Tab context for planning",
+              width: 2632,
+              height: 1574,
             },
           ],
         },

@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { about } from "@/content/about";
 import { FadeIn } from "@/components/motion/FadeIn";
+import { ZoomableImage } from "@/components/ui/zoomable-image";
 
 export default function AboutPage() {
   return (
@@ -11,8 +11,8 @@ export default function AboutPage() {
         <h1 className="text-center text-hero leading-hero text-cream">
           {about.intro}
         </h1>
-        <div className="relative mt-10 aspect-[1182/566] w-full overflow-hidden rounded-stat lg:mt-12">
-          <Image
+        <div className="relative mt-10 aspect-[4/3] w-full overflow-hidden rounded-stat sm:aspect-[16/9] lg:mt-12 lg:aspect-[1182/566]">
+          <ZoomableImage
             src={about.portrait}
             alt="Portrait of Alicia Wood"
             fill
@@ -68,8 +68,8 @@ export default function AboutPage() {
             </a>
           </div>
         </div>
-        <div className="relative mt-10 aspect-[1194/953] w-full overflow-hidden rounded-stat lg:mt-12">
-          <Image
+        <div className="relative mt-10 aspect-[4/3] w-full overflow-hidden rounded-stat sm:aspect-[1194/953] lg:mt-12">
+          <ZoomableImage
             src={about.paperWorthy.image}
             alt="Paper Worthy Company stationery"
             fill

@@ -91,14 +91,40 @@ export function ImpactMetricTable({ block }: { block: ChartBlock }) {
   const liftKey = block.columns.find((c) => c.key === "lift")?.key;
 
   return (
-    <div className="overflow-x-auto rounded-stat bg-surface-dark px-6 py-9">
-      <div className="mb-6">
+    <div className="rounded-stat bg-surface-dark px-4 py-6 lg:px-6 lg:py-9">
+      <div className="mb-4 lg:mb-6">
         <h3 className="text-[0.875rem] leading-normal text-cream">{block.title}</h3>
         {block.subtitle ? (
           <p className="mt-1 text-[0.875rem] text-text-muted">{block.subtitle}</p>
         ) : null}
       </div>
-      <table className="w-full min-w-[28rem] border-collapse text-left text-[0.875rem] text-cream">
+
+      <div className="divide-y divide-border/60 lg:hidden">
+        {block.rows.map((row) => (
+          <div key={row.label} className="py-4 first:pt-0 last:pb-0">
+            <p className="text-[0.875rem] leading-normal text-cream">{row.label}</p>
+            <dl className="mt-3 grid grid-cols-3 gap-2">
+              {block.columns.map((col) => (
+                <div key={col.key}>
+                  <dt className="text-meta text-text-muted">{col.label}</dt>
+                  <dd
+                    className={cn(
+                      "mt-1 text-[0.875rem] tabular-nums leading-normal",
+                      col.key === liftKey
+                        ? "font-medium text-lime"
+                        : "text-cream"
+                    )}
+                  >
+                    {row.values[col.key] ?? "—"}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        ))}
+      </div>
+
+      <table className="hidden w-full border-collapse text-left text-[0.875rem] text-cream lg:table">
         <thead>
           <tr className="border-b border-border">
             <th className="py-3 pr-4 font-medium text-text-muted">Metric</th>
@@ -111,7 +137,10 @@ export function ImpactMetricTable({ block }: { block: ChartBlock }) {
         </thead>
         <tbody>
           {block.rows.map((row) => (
-            <tr key={row.label} className="border-b border-border/60 last:border-0">
+            <tr
+              key={row.label}
+              className="border-b border-border/60 last:border-0"
+            >
               <th scope="row" className="py-3 pr-4 font-normal text-cream">
                 {row.label}
               </th>
@@ -119,8 +148,10 @@ export function ImpactMetricTable({ block }: { block: ChartBlock }) {
                 <td
                   key={col.key}
                   className={cn(
-                    "py-3 pr-4",
-                    col.key === liftKey ? "font-medium text-lime" : "text-text-muted"
+                    "py-3 pr-4 tabular-nums",
+                    col.key === liftKey
+                      ? "font-medium text-lime"
+                      : "text-text-muted"
                   )}
                 >
                   {row.values[col.key] ?? "—"}
@@ -149,28 +180,13 @@ function collectSectionImages(blocks: Block[]): MediaImage[] {
       });
     } else if (block.type === "carousel") {
       images.push(...block.images);
-    } else if (block.type === "approach-step" && block.images?.length) {
-      images.push(...block.images);
     }
   }
   return images;
 }
 
 function withoutMediaBlocks(blocks: Block[]): Block[] {
-  return blocks
-    .filter((b) => b.type !== "image" && b.type !== "carousel")
-    .map((block) => {
-      if (block.type === "approach-step" && block.images?.length) {
-        return {
-          type: "approach-step" as const,
-          title: block.title,
-          body: block.body,
-          bullets: block.bullets,
-          tags: block.tags,
-        };
-      }
-      return block;
-    });
+  return blocks.filter((b) => b.type !== "image" && b.type !== "carousel");
 }
 
 export function BlockRenderer({ block }: { block: Block }) {
@@ -218,6 +234,11 @@ export function BlockRenderer({ block }: { block: Block }) {
             <p className="text-meta-lg text-lime">
               {block.tags.map((t) => (t.startsWith("#") ? t : `#${t}`)).join(" ")}
             </p>
+          ) : null}
+          {block.images?.length ? (
+            <div className="pt-2">
+              <SectionMediaCarousel images={block.images} inset />
+            </div>
           ) : null}
         </div>
       );
