@@ -31,10 +31,10 @@ export const financialPlanSummary: CaseStudy = {
       blocks: [
         {
           type: "prose",
-          body: "The current financial plan summary didn't support a clear narrative — it didn't highlight the value the company created, the complexity of the work that went into a financial plan, or the information wealth managers most needed to communicate to their members.",
+          body: "The problem presented to the creative team by the business and product manager was: the current financial plan summary didn't support a clear narrative that highlighted the value created by the company, the work that went into a financial plan, and the information wealth managers most often needed to communicate to their members.",
           bullets: [
-            "A section showing the chance of success of the financial plan",
-            "Graphs, tables, and lists, without a throughline connecting them",
+            "A section that showed the chance of success of the financial plan",
+            "Graphs, tables, and lists",
           ],
         },
         {
@@ -57,37 +57,48 @@ export const financialPlanSummary: CaseStudy = {
       blocks: [
         {
           type: "prose",
-          body: "Redefine the problem as: wealth managers must translate the current financial plan summary to their clients — meaning the design itself should carry that translation, not the wealth manager.",
+          body: "After conducting research and discovery, we redefined the problem to be: wealth managers must translate the current financial plan summary to their clients.",
         },
       ],
     },
     {
       id: "approach",
       title: "The Approach",
+      variant: "approach-grid",
       blocks: [
         {
           type: "prose",
-          body: "I led the team through Understand, Explore, and Materialize phases of the design thinking framework.",
+          body: "We followed a design thinking framework to solve the problem.",
         },
         {
           type: "approach-step",
-          title: "Reviewed user sessions and analytics",
-          body: "Reviewed 50 user sessions to determine the main purpose of clients logging in, and used a web analytics tool to identify the path users most often took through the application.",
+          title: "User Session Reviews",
+          body: "I reviewed 50 user sessions to determine the main purpose of clients logging in.",
         },
         {
           type: "approach-step",
-          title: "Audited the application",
-          body: "Reviewed the application to determine elements that could be found in multiple places, then conducted 1:1 interviews with members of the wealth management team to understand how they used the financial summary page day to day.",
+          title: "Application Analytics",
+          body: "Using a web analytics tool, I identified the path users often take while using the application.",
         },
         {
           type: "approach-step",
-          title: "Brainstormed concepts",
-          body: "Using the research insights, the design team ran a brainstorming session and landed on two concepts to explore further: storytelling and timeline.",
+          title: "Application Review",
+          body: "I did a review of the application to determine elements that could be found in multiple places.",
         },
         {
           type: "approach-step",
-          title: "Gathered feedback and iterated",
-          body: "Shared multiple iterations with the wealth managers themselves to gather feedback and improve the design before moving forward.",
+          title: "1:1 Interviews",
+          body: "I conducted 1:1 interviews with members of the wealth management team to understand how they use the financial summary page and the application.",
+        },
+        {
+          type: "approach-step",
+          title: "Brainstorming Session",
+          body: "Using the insights, the design team had a brainstorming session where we came up with two concepts: storytelling and timeline.",
+        },
+        {
+          type: "approach-step",
+          title: "Design Feedback",
+          body: "We shared multiple iterations with the wealth managers to gather feedback and improve the design.",
         },
         {
           type: "carousel",
@@ -120,13 +131,11 @@ export const financialPlanSummary: CaseStudy = {
       blocks: [
         {
           type: "list",
-          title: "What we heard qualitatively",
           items: [
             "Wealth managers use the financial summary page to facilitate conversations with clients as an educational walkthrough.",
             "Current versus future is a large part of client conversations, but that sense of time wasn't clear in the application.",
             "Some parts of the application were thought-challenging or confusing to the client.",
-            "Wealth managers considered the compare-plan feature highly valuable, but it was underutilized by clients.",
-            "The same information could be found in multiple places throughout the application.",
+            "Wealth managers use the compare-plan feature heavily and consider it a great feature.",
           ],
         },
         {
@@ -166,13 +175,18 @@ export const financialPlanSummary: CaseStudy = {
       blocks: [
         {
           type: "prose",
-          body: "The team moved forward with the timeline concept. Members would see their financial life laid out on a timeline, with specific moments and milestones displayed visually — a planned trip to Italy, a bequest to a grandchild — instead of a wall of graphs and tables.",
+          body: "We moved forward with the timeline concept. Members would see their financial life on a timeline, with specific moments and milestones displayed visually — like a planned trip to Italy or a bequest to a grandchild.",
         },
+      ],
+    },
+    {
+      id: "solution-statement",
+      title: "The Solution",
+      variant: "callout",
+      blocks: [
         {
-          type: "quote",
-          quote:
-            "We translated the financial plan summary so the members didn't have to.",
-          attribution: "Design team",
+          type: "prose",
+          body: "We translated the financial plan summary so the members didn't have to.",
         },
       ],
     },
@@ -183,8 +197,19 @@ export const financialPlanSummary: CaseStudy = {
         {
           type: "prose",
           body: [
-            "Scope expanded to include a dashboard with multiple sections at the top of the page, ahead of the timeline itself. The dashboard shipped first; the timeline continued in development.",
-            "After launch, the team identified some data points that could affect the credibility of the page as a whole, and I worked with the cross-functional and wealth management teams on updates to the summary.",
+            "Additional scope was added to the project, including a dashboard with multiple sections at the top of the page before the member sees the timeline. The timeline is currently in development.",
+            "After launching the top portion of the page, we identified some data points that may impact the credibility of all the data points on the page. I'm currently working with our cross-functional and Wealth Management team to make updates to the summary.",
+          ],
+        },
+        {
+          type: "carousel",
+          images: [
+            {
+              src: "/images/case-studies/financial-plan-summary/fp-current-plan.png",
+              alt: "The redesigned current financial plan page",
+              width: 1582,
+              height: 1922,
+            },
           ],
         },
       ],

@@ -98,7 +98,7 @@ export type CaseStudySection = {
   id: string;
   title: string;
   /** Full-bleed centered band (Figma Opportunity / Real Opportunity) */
-  variant?: "default" | "callout";
+  variant?: "default" | "callout" | "approach-grid";
   blocks: Block[];
 };
 

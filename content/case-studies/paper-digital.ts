@@ -10,14 +10,18 @@ export type PaperDigitalCaseStudy = {
     kicker: string;
     statement: string;
     items: { title: string; body: string }[];
+    image: { src: string; alt: string; width: number; height: number };
   };
   discoveries: { heading: string; cards: string[] };
   solutions: {
     heading: string;
-    items: { title: string; body: string }[];
-    image: { src: string; alt: string };
+    images: { src: string; alt: string; width: number; height: number }[];
   };
-  closing: { heading: string; body: string[] };
+  closing: {
+    heading: string;
+    body: string[];
+    image: { src: string; alt: string; width: number; height: number };
+  };
 };
 
 export const paperDigital: PaperDigitalCaseStudy = {
@@ -74,6 +78,12 @@ export const paperDigital: PaperDigitalCaseStudy = {
         body: "I created prototypes of the two design concepts and tested them with Wealth Associates. We landed on the longer form with the ability to collapse sections.",
       },
     ],
+    image: {
+      src: "/images/case-studies/paper-digital/figma-prototype-test.png",
+      alt: "Prototype testing of the multi-step and collapsed form concepts",
+      width: 3408,
+      height: 1874,
+    },
   },
   discoveries: {
     heading: "Research Discoveries",
@@ -86,32 +96,38 @@ export const paperDigital: PaperDigitalCaseStudy = {
   },
   solutions: {
     heading: "The Solutions",
-    items: [
+    images: [
       {
-        title: "Save Application",
-        body: "We added the ability to save application. Wealth Associates will be able to start and application and revisit if they need more information from clients.",
+        src: "/images/case-studies/paper-digital/figma-summary-1.png",
+        alt: "Digital trust application summary, screen 1",
+        width: 1852,
+        height: 1106,
       },
       {
-        title: "Ref Numbers",
-        body: "We added a reference ID and confirmation # to every application to connect application to outside activities that aren't \"digitized\".",
+        src: "/images/case-studies/paper-digital/figma-summary-2.png",
+        alt: "Digital trust application summary, screen 2",
+        width: 1856,
+        height: 1110,
       },
       {
-        title: "Expand/Collapse",
-        body: "Long forms can feel overwhelming and be hard to review so we added expand/collapsed sections to give the Wealth Associate the ability to view collapsed version of form.",
+        src: "/images/case-studies/paper-digital/figma-summary-3.png",
+        alt: "Digital trust application summary, screen 3",
+        width: 1854,
+        height: 1108,
       },
       {
-        title: "Checkmarks",
-        body: "We added checkmarks to each section once a Wealth Associate completes it, to let them know what sections still need to be complete.",
+        src: "/images/case-studies/paper-digital/figma-summary-4.png",
+        alt: "Digital trust application summary, screen 4",
+        width: 1854,
+        height: 1110,
       },
       {
-        title: "Progress Bar",
-        body: "We added a progress bar at the top so the Wealth Associate would know exactly where they are in the open account process.",
+        src: "/images/case-studies/paper-digital/figma-summary-5.png",
+        alt: "Digital trust application summary, screen 5",
+        width: 1856,
+        height: 1106,
       },
     ],
-    image: {
-      src: "/images/case-studies/paper-digital/figma-application-form.png",
-      alt: "Digital application prototype showing step progress, save draft, and expandable form sections",
-    },
   },
   closing: {
     heading: "Summary",
@@ -119,5 +135,11 @@ export const paperDigital: PaperDigitalCaseStudy = {
       "During the discovery stage I was trying to determine the amount of errors or rejections of the paper forms. Unfortunately this data was not tracked. As part of this work to digitalize the paper form, these are the types of analytics we could capture in the future.",
       "As a designer practicing design thinking, it's so important to understand the end to end experience of all projects. This project was no different. What was in scope did not reflect what truly needed to be done to improve the end to end experience of the Wealth Associate and client. Working with the Product Management team, I hoped to implement a solution for the whole open account process that would save the Wealth Associate and clients time and energy.",
     ],
+    image: {
+      src: "/images/case-studies/paper-digital/figma-trust-application.png",
+      alt: "Digital trust application",
+      width: 1382,
+      height: 1944,
+    },
   },
 };

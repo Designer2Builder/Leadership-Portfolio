@@ -54,6 +54,10 @@ export function PaperDigitalCaseStudy({
             </div>
           ))}
         </div>
+
+        <div className="mt-10 lg:mt-12">
+          <SectionMediaCarousel images={[study.approach.image]} />
+        </div>
       </section>
 
       <CaseStudySection title={study.discoveries.heading}>
@@ -72,25 +76,13 @@ export function PaperDigitalCaseStudy({
       </CaseStudySection>
 
       <CaseStudySection title={study.solutions.heading}>
-        {study.solutions.items.map((item) => (
-          <BlockRenderer
-            key={item.title}
-            block={{ type: "prose", title: item.title, body: item.body }}
-          />
-        ))}
-        <SectionMediaCarousel
-          images={[
-            {
-              src: study.solutions.image.src,
-              alt: study.solutions.image.alt,
-              width: 1080,
-              height: 1103,
-            },
-          ]}
-        />
+        <SectionMediaCarousel images={study.solutions.images} />
       </CaseStudySection>
 
-      <CaseStudySection title={study.closing.heading}>
+      <CaseStudySection
+        title={study.closing.heading}
+        media={[study.closing.image]}
+      >
         <BlockRenderer block={{ type: "prose", body: study.closing.body }} />
       </CaseStudySection>
     </CaseStudyLayout>

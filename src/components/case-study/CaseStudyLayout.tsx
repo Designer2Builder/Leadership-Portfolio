@@ -213,13 +213,17 @@ export function BlockRenderer({ block }: { block: Block }) {
       return <ImpactStatCards block={block} />;
     case "list":
       return (
-        <div>
-          {block.title ? (
-            <h3 className="mb-3 text-[1.25rem] font-normal text-cream">
-              {block.title}
-            </h3>
-          ) : null}
-          <Bullets items={[...block.items]} />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {block.items.map((item) => (
+            <div
+              key={item}
+              className="flex min-h-[20rem] flex-col justify-end rounded-card border border-border bg-surface-dark p-8"
+            >
+              <p className="text-[1.5rem] leading-normal text-text-muted">
+                {item}
+              </p>
+            </div>
+          ))}
         </div>
       );
     case "tabs":
@@ -361,6 +365,51 @@ function calloutBody(section: CaseStudySectionData): string {
   return Array.isArray(prose.body) ? prose.body[0] ?? "" : prose.body;
 }
 
+function approachStepBody(body: string | string[]): string {
+  return Array.isArray(body) ? body.join(" ") : body;
+}
+
+function ApproachGridSection({ section }: { section: CaseStudySectionData }) {
+  const statement = calloutBody(section);
+  const steps = section.blocks.filter((b) => b.type === "approach-step");
+  const media = collectSectionImages(section.blocks);
+
+  return (
+    <section className="mx-auto w-full max-w-content px-gutter lg:px-0">
+      <div className="mx-auto max-w-[41.5rem] text-center">
+        <p className="text-[1.25rem] font-medium leading-normal text-cream">
+          {section.title}
+        </p>
+        <p className="mt-6 text-[1.5rem] leading-normal text-cream lg:text-hero-lg lg:leading-hero-lg">
+          {statement}
+        </p>
+      </div>
+
+      <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3 lg:gap-8">
+        {steps.map((step, i) =>
+          step.type === "approach-step" ? (
+            <div
+              key={`${section.id}-${i}`}
+              className="rounded-card border border-border px-6 py-8"
+            >
+              <p className="text-[1.25rem] text-cream">{step.title}</p>
+              <p className="mt-2 text-[1rem] leading-normal text-text-muted">
+                {approachStepBody(step.body)}
+              </p>
+            </div>
+          ) : null
+        )}
+      </div>
+
+      {media.length > 0 ? (
+        <div className="mt-10 lg:mt-12">
+          <SectionMediaCarousel images={media} />
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
 export function CaseStudySections({
   sections,
 }: {
@@ -377,6 +426,10 @@ export function CaseStudySections({
               body={calloutBody(section)}
             />
           );
+        }
+
+        if (section.variant === "approach-grid") {
+          return <ApproachGridSection key={section.id} section={section} />;
         }
 
         const media = collectSectionImages(section.blocks);
