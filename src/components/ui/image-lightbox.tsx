@@ -1,15 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Minus, Plus, X } from "lucide-react";
 import { Dialog, VisuallyHidden } from "radix-ui";
 import imageLoader from "@/lib/image-loader";
 import { cn } from "@/lib/utils";
 
-const MIN_SCALE = 1;
-const MAX_SCALE = 5;
+const MIN_USER_SCALE = 1;
 const DOUBLE_TAP_MS = 280;
 const DRAG_CLOSE_PX = 90;
+const LONG_EDGE_CAP = 4096;
+const VIEW_ZOOM_MULTIPLIER = 6;
 
 type Point = { x: number; y: number };
 
@@ -29,25 +30,28 @@ function clamp(n: number, min: number, max: number) {
   return Math.min(max, Math.max(min, n));
 }
 
-function readableStartScale(displayW: number, displayH: number, viewW: number, viewH: number) {
-  if (displayW <= 0 || displayH <= 0) return 1;
-  const isWide = displayW / displayH > 1.6;
-  if (!isWide) return 1;
-  const targetH = viewH * 0.62;
-  return clamp(targetH / displayH, 1, 3);
+function renderBox(naturalW: number, naturalH: number, viewW: number, viewH: number) {
+  if (naturalW <= 0 || naturalH <= 0 || viewW <= 0 || viewH <= 0) {
+    return { w: 0, h: 0 };
+  }
+  const dpr = typeof window === "undefined" ? 1 : window.devicePixelRatio || 1;
+  const long = Math.max(naturalW, naturalH);
+  const viewLong = Math.max(viewW, viewH);
+  const cap = Math.min(long, LONG_EDGE_CAP, Math.max(viewLong * dpr * VIEW_ZOOM_MULTIPLIER, viewLong));
+  const ratio = cap / long;
+  return { w: naturalW * ratio, h: naturalH * ratio };
 }
 
 function clampPan(
   tx: number,
   ty: number,
-  scale: number,
-  displayW: number,
-  displayH: number,
+  displayedW: number,
+  displayedH: number,
   viewW: number,
   viewH: number
 ): Point {
-  const maxX = Math.max(0, (displayW * scale - viewW) / 2);
-  const maxY = Math.max(0, (displayH * scale - viewH) / 2);
+  const maxX = Math.max(0, (displayedW - viewW) / 2);
+  const maxY = Math.max(0, (displayedH - viewH) / 2);
   return {
     x: clamp(tx, -maxX, maxX),
     y: clamp(ty, -maxY, maxY),
@@ -69,17 +73,26 @@ export function ImageLightbox({
   width?: number;
   height?: number;
 }) {
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const scaleRef = useRef(1);
+  const canvasRef = useRef<HTMLDivElement | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
+  const userScaleRef = useRef(1);
   const panRef = useRef<Point>({ x: 0, y: 0 });
   const pinchRef = useRef<{ dist: number; scale: number; pan: Point; mid: Point } | null>(null);
   const panStartRef = useRef<{ pointer: Point; pan: Point } | null>(null);
   const lastTapRef = useRef<{ time: number; point: Point } | null>(null);
   const movedRef = useRef(false);
+  const metricsRef = useRef({
+    contain: 1,
+    renderW: 0,
+    renderH: 0,
+    viewW: 0,
+    viewH: 0,
+    maxUserScale: 1,
+  });
 
   const [view, setView] = useState({ w: 0, h: 0 });
   const [loaded, setLoaded] = useState({ w: 0, h: 0 });
-  const [userScale, setUserScale] = useState<number | null>(null);
+  const [userScale, setUserScale] = useState(1);
   const [pan, setPan] = useState<Point>({ x: 0, y: 0 });
   const [hintExpired, setHintExpired] = useState(false);
 
@@ -87,35 +100,54 @@ export function ImageLightbox({
     w: width || loaded.w,
     h: height || loaded.h,
   };
-  const fit =
-    natural.w > 0 && natural.h > 0 && view.w > 0 && view.h > 0
-      ? Math.min(view.w / natural.w, view.h / natural.h)
-      : 0;
-  const displayW = natural.w * fit;
-  const displayH = natural.h * fit;
-  const baseScale = readableStartScale(displayW, displayH, view.w, view.h);
-  const scale = userScale ?? baseScale;
+  const render = renderBox(natural.w, natural.h, view.w, view.h);
+  const contain =
+    render.w > 0 && render.h > 0 && view.w > 0 && view.h > 0
+      ? Math.min(view.w / render.w, view.h / render.h)
+      : 1;
+  const maxUserScale =
+    contain > 0 ? Math.max(MIN_USER_SCALE, 1 / contain) : MIN_USER_SCALE;
+  const cssScale = contain * userScale;
+  const displayedW = render.w * cssScale;
+  const displayedH = render.h * cssScale;
+  const overflows = displayedW > view.w + 2 || displayedH > view.h + 2;
 
-  const apply = useCallback(
-    (nextScale: number, nextPan: Point) => {
-      const s = clamp(nextScale, MIN_SCALE, MAX_SCALE);
-      const p = clampPan(nextPan.x, nextPan.y, s, displayW, displayH, view.w, view.h);
-      scaleRef.current = s;
-      panRef.current = p;
-      setUserScale(s);
-      setPan(p);
-    },
-    [displayW, displayH, view.w, view.h]
-  );
+  metricsRef.current = {
+    contain,
+    renderW: render.w,
+    renderH: render.h,
+    viewW: view.w,
+    viewH: view.h,
+    maxUserScale,
+  };
+  userScaleRef.current = userScale;
+  panRef.current = pan;
+
+  const apply = useCallback((nextUserScale: number, nextPan: Point) => {
+    const m = metricsRef.current;
+    const s = clamp(nextUserScale, MIN_USER_SCALE, m.maxUserScale);
+    const displayed = {
+      w: m.renderW * m.contain * s,
+      h: m.renderH * m.contain * s,
+    };
+    const p = clampPan(nextPan.x, nextPan.y, displayed.w, displayed.h, m.viewW, m.viewH);
+    userScaleRef.current = s;
+    panRef.current = p;
+    setUserScale(s);
+    setPan(p);
+  }, []);
 
   const zoomAt = useCallback(
     (clientX: number, clientY: number, factor: number) => {
       const canvas = canvasRef.current;
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      const point = { x: clientX - rect.left - rect.width / 2, y: clientY - rect.top - rect.height / 2 };
-      const prev = scaleRef.current;
-      const next = clamp(prev * factor, MIN_SCALE, MAX_SCALE);
+      const point = {
+        x: clientX - rect.left - rect.width / 2,
+        y: clientY - rect.top - rect.height / 2,
+      };
+      const prev = userScaleRef.current;
+      const next = prev * factor;
       const ratio = next / prev;
       apply(next, {
         x: point.x - (point.x - panRef.current.x) * ratio,
@@ -128,44 +160,37 @@ export function ImageLightbox({
   const handleOpenChange = useCallback(
     (next: boolean) => {
       if (!next) {
-        setUserScale(null);
+        setUserScale(1);
         setPan({ x: 0, y: 0 });
         setHintExpired(false);
+        userScaleRef.current = 1;
+        panRef.current = { x: 0, y: 0 };
       }
       onOpenChange(next);
     },
     [onOpenChange]
   );
 
-  useLayoutEffect(() => {
-    scaleRef.current = scale;
-    panRef.current = pan;
-  }, [scale, pan]);
+  const applyRef = useRef(apply);
+  const zoomAtRef = useRef(zoomAt);
+  const handleOpenChangeRef = useRef(handleOpenChange);
+  applyRef.current = apply;
+  zoomAtRef.current = zoomAt;
+  handleOpenChangeRef.current = handleOpenChange;
 
-  useLayoutEffect(() => {
-    if (!open) return;
-    const el = canvasRef.current;
-    if (!el) return;
+  const bindCanvas = useCallback((node: HTMLDivElement | null) => {
+    cleanupRef.current?.();
+    cleanupRef.current = null;
+    canvasRef.current = node;
+    if (!node) return;
+
     const measure = () => {
-      const r = el.getBoundingClientRect();
+      const r = node.getBoundingClientRect();
       setView({ w: r.width, h: r.height });
     };
     measure();
     const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const id = window.setTimeout(() => setHintExpired(true), 2400);
-    return () => window.clearTimeout(id);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    ro.observe(node);
 
     const onTouchStart = (event: TouchEvent) => {
       movedRef.current = false;
@@ -175,7 +200,7 @@ export function ImageLightbox({
         const b = touchPoint(event.touches[1]);
         pinchRef.current = {
           dist: distance(a, b),
-          scale: scaleRef.current,
+          scale: userScaleRef.current,
           pan: { ...panRef.current },
           mid: midpoint(a, b),
         };
@@ -198,16 +223,22 @@ export function ImageLightbox({
         const b = touchPoint(event.touches[1]);
         const factor = distance(a, b) / pinchRef.current.dist;
         const mid = midpoint(a, b);
-        const canvasRect = canvas.getBoundingClientRect();
+        const canvasRect = node.getBoundingClientRect();
         const point = {
           x: pinchRef.current.mid.x - canvasRect.left - canvasRect.width / 2,
           y: pinchRef.current.mid.y - canvasRect.top - canvasRect.height / 2,
         };
-        const nextScale = clamp(pinchRef.current.scale * factor, MIN_SCALE, MAX_SCALE);
+        const nextScale = pinchRef.current.scale * factor;
         const ratio = nextScale / pinchRef.current.scale;
-        apply(nextScale, {
-          x: point.x - (point.x - pinchRef.current.pan.x) * ratio + (mid.x - pinchRef.current.mid.x),
-          y: point.y - (point.y - pinchRef.current.pan.y) * ratio + (mid.y - pinchRef.current.mid.y),
+        applyRef.current(nextScale, {
+          x:
+            point.x -
+            (point.x - pinchRef.current.pan.x) * ratio +
+            (mid.x - pinchRef.current.mid.x),
+          y:
+            point.y -
+            (point.y - pinchRef.current.pan.y) * ratio +
+            (mid.y - pinchRef.current.mid.y),
         });
         movedRef.current = true;
         return;
@@ -217,9 +248,12 @@ export function ImageLightbox({
         const dx = point.x - panStartRef.current.pointer.x;
         const dy = point.y - panStartRef.current.pointer.y;
         if (Math.hypot(dx, dy) > 6) movedRef.current = true;
-        if (scaleRef.current > MIN_SCALE + 0.02) {
+        const m = metricsRef.current;
+        const displayedW = m.renderW * m.contain * userScaleRef.current;
+        const displayedH = m.renderH * m.contain * userScaleRef.current;
+        if (displayedW > m.viewW + 2 || displayedH > m.viewH + 2) {
           event.preventDefault();
-          apply(scaleRef.current, {
+          applyRef.current(userScaleRef.current, {
             x: panStartRef.current.pan.x + dx,
             y: panStartRef.current.pan.y + dy,
           });
@@ -235,11 +269,11 @@ export function ImageLightbox({
         if (!start || movedRef.current) {
           if (
             start &&
-            scaleRef.current <= MIN_SCALE + 0.05 &&
+            userScaleRef.current <= MIN_USER_SCALE + 0.05 &&
             event.changedTouches[0]
           ) {
             const dy = event.changedTouches[0].clientY - start.pointer.y;
-            if (dy > DRAG_CLOSE_PX) handleOpenChange(false);
+            if (dy > DRAG_CLOSE_PX) handleOpenChangeRef.current(false);
           }
           return;
         }
@@ -248,10 +282,10 @@ export function ImageLightbox({
         const last = lastTapRef.current;
         if (last && now - last.time < DOUBLE_TAP_MS && distance(last.point, point) < 36) {
           lastTapRef.current = null;
-          if (scaleRef.current > 1.15) {
-            apply(MIN_SCALE, { x: 0, y: 0 });
+          if (userScaleRef.current > 1.15) {
+            applyRef.current(MIN_USER_SCALE, { x: 0, y: 0 });
           } else {
-            zoomAt(point.x, point.y, 2.4);
+            zoomAtRef.current(point.x, point.y, 2.4);
           }
           return;
         }
@@ -261,23 +295,41 @@ export function ImageLightbox({
 
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
-      zoomAt(event.clientX, event.clientY, event.deltaY > 0 ? 0.9 : 1.12);
+      zoomAtRef.current(event.clientX, event.clientY, event.deltaY > 0 ? 0.9 : 1.12);
     };
 
     const opts: AddEventListenerOptions = { passive: false };
-    canvas.addEventListener("touchstart", onTouchStart, opts);
-    canvas.addEventListener("touchmove", onTouchMove, opts);
-    canvas.addEventListener("touchend", onTouchEnd, opts);
-    canvas.addEventListener("touchcancel", onTouchEnd, opts);
-    canvas.addEventListener("wheel", onWheel, opts);
-    return () => {
-      canvas.removeEventListener("touchstart", onTouchStart, opts);
-      canvas.removeEventListener("touchmove", onTouchMove, opts);
-      canvas.removeEventListener("touchend", onTouchEnd, opts);
-      canvas.removeEventListener("touchcancel", onTouchEnd, opts);
-      canvas.removeEventListener("wheel", onWheel, opts);
+    node.addEventListener("touchstart", onTouchStart, opts);
+    node.addEventListener("touchmove", onTouchMove, opts);
+    node.addEventListener("touchend", onTouchEnd, opts);
+    node.addEventListener("touchcancel", onTouchEnd, opts);
+    node.addEventListener("wheel", onWheel, opts);
+
+    cleanupRef.current = () => {
+      ro.disconnect();
+      node.removeEventListener("touchstart", onTouchStart, opts);
+      node.removeEventListener("touchmove", onTouchMove, opts);
+      node.removeEventListener("touchend", onTouchEnd, opts);
+      node.removeEventListener("touchcancel", onTouchEnd, opts);
+      node.removeEventListener("wheel", onWheel, opts);
     };
-  }, [open, apply, handleOpenChange, zoomAt]);
+  }, []);
+
+  useEffect(() => () => cleanupRef.current?.(), []);
+
+  useEffect(() => {
+    if (!open) return;
+    const id = window.setTimeout(() => setHintExpired(true), 2400);
+    return () => window.clearTimeout(id);
+  }, [open]);
+
+  useEffect(() => {
+    setLoaded({ w: 0, h: 0 });
+    setUserScale(1);
+    setPan({ x: 0, y: 0 });
+    userScaleRef.current = 1;
+    panRef.current = { x: 0, y: 0 };
+  }, [src]);
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "touch") return;
@@ -296,8 +348,8 @@ export function ImageLightbox({
     const dx = event.clientX - start.pointer.x;
     const dy = event.clientY - start.pointer.y;
     if (Math.hypot(dx, dy) > 4) movedRef.current = true;
-    if (scaleRef.current > MIN_SCALE + 0.02) {
-      apply(scaleRef.current, { x: start.pan.x + dx, y: start.pan.y + dy });
+    if (overflows) {
+      apply(userScaleRef.current, { x: start.pan.x + dx, y: start.pan.y + dy });
     }
   };
 
@@ -314,16 +366,16 @@ export function ImageLightbox({
     const last = lastTapRef.current;
     if (last && now - last.time < DOUBLE_TAP_MS && distance(last.point, point) < 36) {
       lastTapRef.current = null;
-      if (scaleRef.current > 1.15) apply(MIN_SCALE, { x: 0, y: 0 });
+      if (userScaleRef.current > 1.15) apply(MIN_USER_SCALE, { x: 0, y: 0 });
       else zoomAt(point.x, point.y, 2.4);
       return;
     }
     lastTapRef.current = { time: now, point };
   };
 
-  const srcUrl = imageLoader({ src, width: natural.w || 1600 });
+  const srcUrl = imageLoader({ src, width: Math.round(render.w) || natural.w || 1600 });
   const label = alt.trim() || "Zoomed image";
-  const hint = open && baseScale > 1.05 && userScale === null && !hintExpired;
+  const hint = open && userScale <= 1.05 && !hintExpired;
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
@@ -374,10 +426,10 @@ export function ImageLightbox({
           </div>
 
           <div
-            ref={canvasRef}
+            ref={bindCanvas}
             className={cn(
               "relative min-h-0 flex-1 touch-none overflow-hidden overscroll-none",
-              scale > 1.02 ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
+              overflows ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
             )}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
@@ -387,9 +439,9 @@ export function ImageLightbox({
             <div
               className="absolute top-1/2 left-1/2 origin-center will-change-transform"
               style={{
-                width: displayW || undefined,
-                height: displayH || undefined,
-                transform: `translate(-50%, -50%) translate(${pan.x}px, ${pan.y}px) scale(${scale})`,
+                width: render.w || undefined,
+                height: render.h || undefined,
+                transform: `translate(-50%, -50%) translate(${pan.x}px, ${pan.y}px) scale(${cssScale})`,
               }}
             >
               {src ? (
@@ -398,6 +450,8 @@ export function ImageLightbox({
                 <img
                   src={srcUrl}
                   alt={alt}
+                  width={render.w || natural.w || undefined}
+                  height={render.h || natural.h || undefined}
                   draggable={false}
                   className="pointer-events-none size-full max-w-none select-none object-contain"
                   onLoad={(event) => {

@@ -31,7 +31,7 @@ export const financialPlanSummary: CaseStudy = {
       blocks: [
         {
           type: "prose",
-          body: "The current financial plan summary didn't support a clear narrative — it didn't highlight the value the company created, the work that went into a financial plan, or the information wealth managers most needed to communicate to their members.",
+          body: "The current financial plan summary didn't support a clear narrative — it didn't highlight the value the company created, the complexity of the work that went into a financial plan, or the information wealth managers most needed to communicate to their members.",
           bullets: [
             "A section showing the chance of success of the financial plan",
             "Graphs, tables, and lists, without a throughline connecting them",
@@ -57,7 +57,7 @@ export const financialPlanSummary: CaseStudy = {
       blocks: [
         {
           type: "prose",
-          body: "Redefine the problem as: wealth managers must translate the current financial plan summary to their clients.",
+          body: "Redefine the problem as: wealth managers must translate the current financial plan summary to their clients — meaning the design itself should carry that translation, not the wealth manager.",
         },
       ],
     },
@@ -125,7 +125,7 @@ export const financialPlanSummary: CaseStudy = {
             "Wealth managers use the financial summary page to facilitate conversations with clients as an educational walkthrough.",
             "Current versus future is a large part of client conversations, but that sense of time wasn't clear in the application.",
             "Some parts of the application were thought-challenging or confusing to the client.",
-            "Wealth managers use the compare-plan feature heavily and consider it a great feature.",
+            "Wealth managers considered the compare-plan feature highly valuable, but it was underutilized by clients.",
             "The same information could be found in multiple places throughout the application.",
           ],
         },
