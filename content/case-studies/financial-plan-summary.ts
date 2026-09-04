@@ -20,7 +20,6 @@ export const financialPlanSummary: CaseStudy = {
           type: "prose",
           body: [
             "United Income was a financial planning and investment company focused on holistic wealth management, acquired by Capital One in 2019. I worked as Lead UX Designer alongside a Director of UX, a Creative Director, and a Product Manager.",
-            "Due to confidentiality, some project artifacts can't be shown here. Photographs are from unsplash.com.",
           ],
         },
       ],
@@ -197,8 +196,7 @@ export const financialPlanSummary: CaseStudy = {
         {
           type: "prose",
           body: [
-            "Additional scope was added to the project, including a dashboard with multiple sections at the top of the page before the member sees the timeline. The timeline is currently in development.",
-            "After launching the top portion of the page, we identified some data points that may impact the credibility of all the data points on the page. I'm currently working with our cross-functional and Wealth Management team to make updates to the summary.",
+            "Additional scope was added to the project, including a dashboard with multiple sections at the top of the page before the member sees the timeline.",
           ],
         },
         {

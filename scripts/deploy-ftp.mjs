@@ -2,11 +2,19 @@
 // Note: uploadFromDir overwrites/adds files but does not delete remote files
 // that no longer exist locally (e.g. after renaming/removing a page) — check
 // the remote directory manually after structural changes.
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import tls from "node:tls";
 import { Client } from "basic-ftp";
+
+function removeDsStore(dir) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) removeDsStore(full);
+    else if (entry.name === ".DS_Store") rmSync(full);
+  }
+}
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // The host (StackCP/123-reg) doesn't send its intermediate cert during the
@@ -36,13 +44,14 @@ if (!existsSync("out")) {
   process.exit(1);
 }
 
-const client = new Client();
-client.ftp.verbose = false;
-client.trackProgress((info) => {
-  console.log(`${info.name} (${info.bytesOverall} bytes)`);
-});
+removeDsStore("out");
 
-try {
+async function connect() {
+  const client = new Client();
+  client.ftp.verbose = false;
+  client.trackProgress((info) => {
+    console.log(`${info.name} (${info.bytesOverall} bytes)`);
+  });
   await client.access({
     host: FTP_HOST,
     port: FTP_PORT,
@@ -58,10 +67,25 @@ try {
       checkServerIdentity: () => undefined,
     },
   });
-  await client.ensureDir(FTP_REMOTE_DIR);
-  await client.uploadFromDir("out", FTP_REMOTE_DIR);
-  console.log("Deploy complete.");
-} finally {
-  client.trackProgress();
-  client.close();
+  return client;
+}
+
+// This host's data connections occasionally drop mid-transfer with a TLS
+// decode error unrelated to any file content — retrying the whole upload
+// (safe since uploadFromDir just overwrites) has reliably succeeded.
+const maxAttempts = 3;
+for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+  const client = await connect();
+  try {
+    await client.ensureDir(FTP_REMOTE_DIR);
+    await client.uploadFromDir("out", FTP_REMOTE_DIR);
+    console.log("Deploy complete.");
+    break;
+  } catch (err) {
+    if (attempt === maxAttempts) throw err;
+    console.warn(`Upload attempt ${attempt} failed (${err.message}), retrying...`);
+  } finally {
+    client.trackProgress();
+    client.close();
+  }
 }
