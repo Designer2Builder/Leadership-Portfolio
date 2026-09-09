@@ -49,6 +49,8 @@ export const homepage = {
         slug: "tax-ai",
         title: "AI Augmented Tax",
         mobileTitle: "AI Augmented Tax",
+        summary:
+          "Led a design team of 5 through a winning tax season and turned a 25-hour planning bottleneck into a reusable AI assistant.",
         href: "/work/tax-ai",
         image: "/images/homepage/1.0_Image_1.png",
         role: "Senior Manager, Product Design",
@@ -60,6 +62,8 @@ export const homepage = {
         slug: "monileo",
         title: "Redesigning CK money",
         mobileTitle: "Redesigning CK money",
+        summary:
+          "Co-led the Credit Karma Money redesign, driving double-digit lifts in key actions.",
         href: "/work/monileo",
         image: "/images/homepage/1.0_Image_2.png",
         role: "Manager, Product Design",
@@ -70,6 +74,8 @@ export const homepage = {
         slug: "orientation",
         title: "Reducing account draining",
         mobileTitle: "Reducing account draining",
+        summary:
+          "Reduced account draining and lifted key activation actions for CK Money members.",
         href: "/work/orientation",
         image: "/images/homepage/1.0_Image_3.png",
         role: "Staff Product Design",

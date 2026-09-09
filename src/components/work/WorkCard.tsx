@@ -6,6 +6,7 @@ export type WorkItem = {
   slug: string;
   title: string;
   mobileTitle: string;
+  summary: string;
   href: string;
   image: string;
   imagePosition?: string;
@@ -60,8 +61,13 @@ export function WorkCardDesktop({ item }: { item: WorkItem }) {
         </div>
       </div>
 
-      <div className="flex items-end justify-between gap-8 px-8 pb-6">
-        <h3 className="text-title-lg text-cream">{item.title}</h3>
+      <div className="flex items-start justify-between gap-8 px-8 pb-6">
+        <div className="min-w-0 flex-1">
+          <h3 className="text-title-lg text-cream">{item.title}</h3>
+          <p className="mt-2 text-footer-lg leading-normal text-text-muted">
+            {item.summary}
+          </p>
+        </div>
         <div className="flex shrink-0 flex-col items-end gap-1 text-right">
           <RoleMeta role={item.role} year={item.year} />
           <p className="text-meta-lg text-cream">{item.tags}</p>
@@ -94,6 +100,9 @@ export function WorkCardMobile({ item }: { item: WorkItem }) {
       </div>
       <div className="flex flex-col gap-1.5 px-4 py-3">
         <h3 className="text-2xl leading-none text-cream">{item.mobileTitle}</h3>
+        <p className="text-footer leading-normal text-text-muted">
+          {item.summary}
+        </p>
         <p className="text-sm text-cream">
           {item.mobileRole ?? item.role} • {item.year}
         </p>
