@@ -61,17 +61,13 @@ export function WorkCardDesktop({ item }: { item: WorkItem }) {
         </div>
       </div>
 
-      <div className="flex items-start justify-between gap-8 px-8 pb-6">
-        <div className="min-w-0 flex-1">
-          <h3 className="text-title-lg text-cream">{item.title}</h3>
-          <p className="mt-2 text-footer-lg leading-normal text-text-muted">
-            {item.summary}
-          </p>
-        </div>
-        <div className="flex shrink-0 flex-col items-end gap-1 text-right">
-          <RoleMeta role={item.role} year={item.year} />
-          <p className="text-meta-lg text-cream">{item.tags}</p>
-        </div>
+      <div className="flex flex-col gap-2 px-8 pb-6">
+        <h3 className="text-title-lg text-cream">{item.title}</h3>
+        <p className="text-footer-lg leading-normal text-text-muted">
+          {item.summary}
+        </p>
+        <RoleMeta role={item.role} year={item.year} />
+        <p className="text-meta-lg text-cream">{item.tags}</p>
       </div>
     </Link>
   );
